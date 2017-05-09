@@ -1,0 +1,6 @@
+hash: 1b8ac1f8238e1bf94721ccddf5fd255cc6561140367d9242d52b3646c1de6c18
+updated: 2017-05-09T11:54:52.439555871+03:00
+imports:
+- name: github.com/sabhiram/go-wol
+  version: dfbff1fb80e2a494b89421ba94fa13a58b2070fa
+testImports: []

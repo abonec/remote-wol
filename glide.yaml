@@ -1,0 +1,3 @@
+package: github.com/abonec/remote-wol
+import:
+- package: github.com/sabhiram/go-wol
