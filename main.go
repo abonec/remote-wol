@@ -7,7 +7,7 @@ import (
 	"github.com/sabhiram/go-wol"
 )
 
-const defaultMac = "48:e2:44:f6:3c:f3"
+const defaultMac = "f4:f2:6d:02:3f:7e"
 const bcast = "255.255.255.255:9"
 
 type Page struct {
@@ -31,7 +31,7 @@ func indexHandler(tmp *template.Template) func(http.ResponseWriter, *http.Reques
 	}
 }
 func sendMagicPacket(addr string) error {
-	return wol.SendMagicPacket(addr, bcast, "")
+	return wol.SendMagicPacket(addr, bcast, "eth0")
 }
 
 func failError(err error) {
