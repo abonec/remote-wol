@@ -5,10 +5,15 @@ import (
 	"html/template"
 	"log"
 	"github.com/sabhiram/go-wol"
+	"github.com/abonec/go-ping"
+	"time"
 )
 
-const defaultMac = "f4:f2:6d:02:3f:7e"
-const bcast = "255.255.255.255:9"
+const (
+	defaultMac = "f4:f2:6d:02:3f:7e"
+	defaultIp  = "192.168.255.14"
+	bcast      = "255.255.255.255:9"
+)
 
 type Page struct {
 	MacAddr string
@@ -39,12 +44,32 @@ func failError(err error) {
 		log.Fatal(err)
 	}
 }
+
+func turnPowerOn() {
+	turnRelay()
+	//sendMagicPacket(defaultMac)
+}
+
 func main() {
+	go startTelegramBot()
 	inputTemplate, err := template.New("input_template").Parse(TEMPLATE_STRING)
 	failError(err)
 	http.HandleFunc("/", indexHandler(inputTemplate))
 	err = http.ListenAndServe(":8081", nil)
 	failError(err)
+}
+
+func pingMachine() bool {
+	pinger, err := ping.NewPinger(defaultIp)
+	failError(err)
+	pinger.Count = 1
+	pinger.Timeout = time.Second
+	pinger.Run()
+	if pinger.Statistics().PacketsRecv > 0 {
+		return true
+	} else {
+		return false
+	}
 }
 
 const TEMPLATE_STRING = `

@@ -1,6 +1,23 @@
-hash: 1b8ac1f8238e1bf94721ccddf5fd255cc6561140367d9242d52b3646c1de6c18
-updated: 2017-05-09T11:54:52.439555871+03:00
+hash: 6077724011232837b8832a8124ca87f3823380b155f60c656eb2df99c5f78ba6
+updated: 2017-07-03T20:41:45.048027212+03:00
 imports:
+- name: github.com/abonec/go-ping
+  version: 6e87a1628d87c347f9139a1d170012b917d2eb13
+- name: github.com/mrmorphic/hwio
+  version: 57be4097a82f84a5455d11c1b00306b037debebc
 - name: github.com/sabhiram/go-wol
   version: dfbff1fb80e2a494b89421ba94fa13a58b2070fa
+- name: github.com/technoweenie/multipartstreamer
+  version: a90a01d73ae432e2611d178c18367fbaa13e0154
+- name: golang.org/x/net
+  version: 3e967e1d28d2c9c06e749dc2bdc14b04df89e689
+  subpackages:
+  - bpf
+  - icmp
+  - internal/iana
+  - internal/netreflect
+  - ipv4
+  - ipv6
+- name: gopkg.in/telegram-bot-api.v4
+  version: 0a57807db79efce7f6719fbb2c0e0f83fda79aec
 testImports: []

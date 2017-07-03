@@ -1,3 +1,8 @@
 package: github.com/abonec/remote-wol
 import:
 - package: github.com/sabhiram/go-wol
+- package: gopkg.in/telegram-bot-api.v4
+  version: ^4.6.0
+- package: github.com/abonec/go-ping
+- package: github.com/mrmorphic/hwio
+  version: master
