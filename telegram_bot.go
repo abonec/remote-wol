@@ -10,6 +10,10 @@ var (
 	bot *tgbotapi.BotAPI
 )
 
+const (
+	groupId = -205209134
+)
+
 func startTelegramBot() {
 	var tb_key string
 	if tb_key = os.Getenv("TB_KEY"); "" == tb_key {
@@ -21,8 +25,9 @@ func startTelegramBot() {
 		log.Panic(err)
 	}
 
-	bot.Debug = false
+	bot.Debug = true
 
+	sendBotMessage(groupId, "bot is online")
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
@@ -33,14 +38,20 @@ func startTelegramBot() {
 
 	for update := range updates {
 		go handleMessage(update.Message)
+		log.Println(update.Message.Chat.ID)
 	}
 }
+
 func sendBotMessage(message_id int64, message string) {
 	msg := tgbotapi.NewMessage(message_id, message)
 	bot.Send(msg)
 }
 
-func handleMessage(message *tgbotapi.Message){
+func haltTelegramBot() {
+	sendBotMessage(groupId, "bot is going offline")
+}
+
+func handleMessage(message *tgbotapi.Message) {
 	if message == nil {
 		return
 	}
@@ -58,6 +69,8 @@ func handleMessage(message *tgbotapi.Message){
 			} else {
 				sendBotMessage(chatID, "machine offline")
 			}
+		case "/ping":
+			sendBotMessage(chatID, "pong")
 		default:
 			sendBotMessage(chatID, "unknown command")
 		}

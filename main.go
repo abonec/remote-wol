@@ -7,6 +7,9 @@ import (
 	"github.com/sabhiram/go-wol"
 	"github.com/abonec/go-ping"
 	"time"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 const (
@@ -51,12 +54,13 @@ func turnPowerOn() {
 }
 
 func main() {
-	go startTelegramBot()
-	inputTemplate, err := template.New("input_template").Parse(TEMPLATE_STRING)
-	failError(err)
-	http.HandleFunc("/", indexHandler(inputTemplate))
-	err = http.ListenAndServe(":8081", nil)
-	failError(err)
+	go handleSignals()
+	startTelegramBot()
+	//inputTemplate, err := template.New("input_template").Parse(TEMPLATE_STRING)
+	//failError(err)
+	//http.HandleFunc("/", indexHandler(inputTemplate))
+	//err = http.ListenAndServe(":8081", nil)
+	//failError(err)
 }
 
 func pingMachine() bool {
@@ -69,6 +73,16 @@ func pingMachine() bool {
 		return true
 	} else {
 		return false
+	}
+}
+
+func handleSignals() {
+	sigs := make(chan os.Signal)
+	signal.Notify(sigs, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
+	for sig := range sigs {
+		log.Println(sig)
+		haltTelegramBot()
+		os.Exit(1)
 	}
 }
 
