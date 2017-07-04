@@ -55,12 +55,12 @@ func turnPowerOn() {
 
 func main() {
 	go handleSignals()
-	startTelegramBot()
-	//inputTemplate, err := template.New("input_template").Parse(TEMPLATE_STRING)
-	//failError(err)
-	//http.HandleFunc("/", indexHandler(inputTemplate))
-	//err = http.ListenAndServe(":8081", nil)
-	//failError(err)
+	go startTelegramBot()
+	inputTemplate, err := template.New("input_template").Parse(TEMPLATE_STRING)
+	failError(err)
+	http.HandleFunc("/", indexHandler(inputTemplate))
+	err = http.ListenAndServe(":8081", nil)
+	failError(err)
 }
 
 func pingMachine() bool {

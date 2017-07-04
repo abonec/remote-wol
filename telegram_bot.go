@@ -4,6 +4,7 @@ import (
 	"os"
 	"gopkg.in/telegram-bot-api.v4"
 	"log"
+	"time"
 )
 
 var (
@@ -15,6 +16,7 @@ const (
 )
 
 func startTelegramBot() {
+	time.Sleep(30*time.Second)
 	var tb_key string
 	if tb_key = os.Getenv("TB_KEY"); "" == tb_key {
 		log.Panic("need to send telegram bot key in TB_KEY")
@@ -62,13 +64,10 @@ func handleMessage(message *tgbotapi.Message) {
 		case "/power_on":
 			turnPowerOn()
 			sendBotMessage(chatID, "power on signal was sent")
+			time.Sleep(30*time.Second)
+			pingMachineAction(chatID)
 		case "/status":
-			machineOnline := pingMachine()
-			if machineOnline {
-				sendBotMessage(chatID, "machine online")
-			} else {
-				sendBotMessage(chatID, "machine offline")
-			}
+			pingMachineAction(chatID)
 		case "/ping":
 			sendBotMessage(chatID, "pong")
 		default:
@@ -79,4 +78,13 @@ func handleMessage(message *tgbotapi.Message) {
 	}
 
 	log.Printf("[%s] %s", message.From.UserName, message.Text)
+}
+
+func pingMachineAction(chatID int64) {
+	machineOnline := pingMachine()
+	if machineOnline {
+		sendBotMessage(chatID, "machine online")
+	} else {
+		sendBotMessage(chatID, "machine offline")
+	}
 }
