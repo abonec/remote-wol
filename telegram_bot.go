@@ -29,7 +29,7 @@ func startTelegramBot() {
 
 	bot.Debug = true
 
-	sendBotMessage(groupId, "bot is online")
+	sendGroupMessage("bot is online")
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
@@ -38,10 +38,16 @@ func startTelegramBot() {
 
 	updates, err := bot.GetUpdatesChan(u)
 
-	for update := range updates {
-		go handleMessage(update.Message)
-		log.Println(update.Message.Chat.ID)
-	}
+	go func() {
+		for update := range updates {
+			go handleMessage(update.Message)
+			log.Println(update.Message.Chat.ID)
+		}
+	}()
+}
+
+func sendGroupMessage(message string) {
+	sendBotMessage(groupId, message)
 }
 
 func sendBotMessage(message_id int64, message string) {
@@ -64,8 +70,8 @@ func handleMessage(message *tgbotapi.Message) {
 		case "/power_on":
 			turnPowerOn()
 			sendBotMessage(chatID, "power on signal was sent")
-			time.Sleep(30*time.Second)
-			pingMachineAction(chatID)
+			//time.Sleep(30*time.Second)
+			//pingMachineAction(chatID)
 		case "/status":
 			pingMachineAction(chatID)
 		case "/ping":

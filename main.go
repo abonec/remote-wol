@@ -5,8 +5,6 @@ import (
 	"html/template"
 	"log"
 	"github.com/sabhiram/go-wol"
-	"github.com/abonec/go-ping"
-	"time"
 	"os"
 	"os/signal"
 	"syscall"
@@ -48,32 +46,26 @@ func failError(err error) {
 	}
 }
 
+func printError(err error) {
+	if err != nil {
+		sendGroupMessage(err.Error())
+	}
+}
+
 func turnPowerOn() {
 	turnRelay()
 	//sendMagicPacket(defaultMac)
 }
 
 func main() {
+	startTelegramBot()
 	go handleSignals()
-	go startTelegramBot()
+	go startChecker()
 	inputTemplate, err := template.New("input_template").Parse(TEMPLATE_STRING)
 	failError(err)
 	http.HandleFunc("/", indexHandler(inputTemplate))
 	err = http.ListenAndServe(":8081", nil)
-	failError(err)
-}
-
-func pingMachine() bool {
-	pinger, err := ping.NewPinger(defaultIp)
-	failError(err)
-	pinger.Count = 1
-	pinger.Timeout = time.Second
-	pinger.Run()
-	if pinger.Statistics().PacketsRecv > 0 {
-		return true
-	} else {
-		return false
-	}
+	printError(err)
 }
 
 func handleSignals() {
@@ -82,7 +74,7 @@ func handleSignals() {
 	for sig := range sigs {
 		log.Println(sig)
 		haltTelegramBot()
-		os.Exit(1)
+		os.Exit(0)
 	}
 }
 
